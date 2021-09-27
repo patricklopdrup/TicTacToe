@@ -1,0 +1,18 @@
+
+
+.status {
+    margin-bottom: 10px;
+}
+
+.game {
+    margin: auto;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+  /* .game-info {
+    
+} */
