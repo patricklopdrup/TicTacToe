@@ -1,25 +1,42 @@
 import React from "react"
 import { Square } from "./Square"
 import '../customStyle/Board.css'
+import { AI } from '../Functions/Agent'
 
 export class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
-            xTurn: true,
+            isXTurn: false, // AI play as X
         };
     }
 
+    // When the user click a square
     handleClick(i) {
         const squares = this.state.squares.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
-        squares[i] = this.state.xTurn ? 'X' : 'O'
+        squares[i] = 'O'
+        // Set state for human pick and then let AI pick
         this.setState({
             squares: squares,
-            xTurn: !this.state.xTurn,
+            isXTurn: !this.state.isXTurn,
+        }, () => this.handleAIPick())
+    }
+
+    handleAIPick() {
+        const squares = this.state.squares.slice();
+        if (calculateWinner(squares)) {
+            return;
+        }
+        const aiPick = AI(squares);
+        console.log(aiPick)
+        squares[aiPick] = 'X';
+        this.setState({
+            squares: squares,
+            isXTurn: !this.state.isXTurn,
         })
     }
 
@@ -38,7 +55,7 @@ export class Board extends React.Component {
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
-            status = 'Next player: ' + (this.state.xTurn ? 'X' : 'O')
+            status = 'Next player: ' + (this.state.isXTurn ? 'X' : 'O')
         }
 
         return (
