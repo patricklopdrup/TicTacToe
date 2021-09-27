@@ -1,8 +1,8 @@
 # Tic Tac Toe with Alpha Beta Pruning
 
 ## To run the code
-`<CD>` into the folder
-`<npm run start>`
+`CD` into the folder <br>
+Type `npm run start`
 
 ## Inspiration:
 - For the implementation of the algorithm
