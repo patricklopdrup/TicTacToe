@@ -40,6 +40,10 @@ export class Board extends React.Component {
         })
     }
 
+    whoGoesFirst(player) {
+        const xTurn = player === 'X'
+    }
+
     renderSquare(i) {
         return (
             <Square

@@ -30,8 +30,10 @@ function bestMove(board) {
 function alphaBeta(board, depth, alpha, beta, isMaximizing) {
     let _board = board.slice();
     const result = calculateWinner(_board);
-    if (depth === 0 || result !== null) {
+    if (result !== null) {
         return winnerScores[result];
+    } else if (depth === 0 ) {
+        return calculateHuristic(_board, isMaximizing);
     }
 
     if (isMaximizing) {
@@ -116,19 +118,13 @@ function getPossibleMoves(board) {
 
 function calculateHuristic(squares, isMaximizing) {
     let huristic = 0;
-    // X is maximizer
-    const player = isMaximizing ? 'X' : 'O'
-    const winner = calculateWinner(squares)
-    if (winner) {
-        huristic = winnerScores[winner]
-    } else {
-        /* TODO: implement a huristic for any given state of the board */
-        // for (let i = 0; i < squares.length; i++) {
-        //     if (isMaximizing) {
-
-        //     }
-        // }
-    }
+    squares.forEach((square, index) => {
+        if (square === 'X') {
+            huristic += huristicScore[index];
+        } else if (square === 'O') {
+            huristic -= huristicScore[index];
+        }
+    });
     if (huristic !== 0) {
         console.log("huristic: " + huristic)
     }
@@ -137,8 +133,8 @@ function calculateHuristic(squares, isMaximizing) {
 
 // Give score to the maximizer and minimizer
 const winnerScores = {
-    X: 10,
-    O: -10,
+    X: 20,
+    O: -20,
     tie: 0
 }
 
