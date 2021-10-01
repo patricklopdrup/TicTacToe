@@ -1,12 +1,11 @@
 
-
 export const ChoosePlayer = () => {
-    return(
+    return (
         <div>
             <h3>I play as:</h3>
             <div className="player-buttons">
-            <button onClick={}>X</button>
-            <button>O</button>
+                {/* <button onClick={ }>X</button> */}
+                <button>O</button>
             </div>
         </div>
     )

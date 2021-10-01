@@ -1,5 +1,6 @@
 import React from "react"
 import { Board } from "./Board"
+import { ChoosePlayer } from "./ChoosePlayer"
 import '../customStyle/Game.css'
 
 export class Game extends React.Component {
@@ -8,7 +9,7 @@ export class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board />
-                    
+                    {/* <ChoosePlayer /> */}
                 </div>
                 <div className="game-info">
                     <div>{/* status */}</div>

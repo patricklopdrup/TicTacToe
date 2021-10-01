@@ -8,7 +8,9 @@ export class Board extends React.Component {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
-            isXTurn: false, // AI play as X
+            human: '',
+            ai: '',
+            isAiTurn: false,
         };
     }
 
@@ -18,11 +20,11 @@ export class Board extends React.Component {
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
-        squares[i] = 'O'
+        squares[i] = this.state.human
         // Set state for human pick and then let AI pick
         this.setState({
             squares: squares,
-            isXTurn: !this.state.isXTurn,
+            isAiTurn: !this.state.isAiTurn,
         }, () => this.handleAIPick())
     }
 
@@ -31,17 +33,27 @@ export class Board extends React.Component {
         if (calculateWinner(squares)) {
             return;
         }
-        const aiPick = AI(squares, this.state.isXTurn);
+        const aiPick = AI(squares, this.state.isAiTurn);
         console.log("det blev: " + aiPick)
-        squares[aiPick] = 'X';
+        squares[aiPick] = this.state.ai;
         this.setState({
             squares: squares,
-            isXTurn: !this.state.isXTurn,
+            isAiTurn: !this.state.isAiTurn,
         })
     }
 
     whoGoesFirst(player) {
-        const xTurn = player === 'X'
+        if (player === 'X') {
+            this.state.human = 'X';
+            this.state.ai = 'O'
+            // X always start
+            this.state.isAiTurn = false;
+        } else {
+            this.state.human = 'O';
+            this.state.ai = 'X'
+            // X always start
+            this.state.isAiTurn = true;
+        }
     }
 
     renderSquare(i) {
@@ -59,7 +71,7 @@ export class Board extends React.Component {
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
-            status = 'Next player: ' + (this.state.isXTurn ? 'X' : 'O')
+            status = 'Next player: ' + (this.state.isAiTurn ? this.state.ai : this.state.human)
         }
 
         return (
