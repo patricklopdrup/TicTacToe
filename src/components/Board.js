@@ -8,9 +8,9 @@ export class Board extends React.Component {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
-            human: '',
-            ai: '',
-            isAiTurn: false,
+            human: props.human,
+            ai: props.ai,
+            isAiTurn: props.isAiTurn,
         };
     }
 
@@ -33,27 +33,13 @@ export class Board extends React.Component {
         if (calculateWinner(squares)) {
             return;
         }
-        const aiPick = AI(squares, this.state.isAiTurn);
+        const aiPick = AI(squares, this.state.human, this.state.ai, this.state.isAiTurn);
         console.log("det blev: " + aiPick)
         squares[aiPick] = this.state.ai;
         this.setState({
             squares: squares,
             isAiTurn: !this.state.isAiTurn,
         })
-    }
-
-    whoGoesFirst(player) {
-        if (player === 'X') {
-            this.state.human = 'X';
-            this.state.ai = 'O'
-            // X always start
-            this.state.isAiTurn = false;
-        } else {
-            this.state.human = 'O';
-            this.state.ai = 'X'
-            // X always start
-            this.state.isAiTurn = true;
-        }
     }
 
     renderSquare(i) {
@@ -72,6 +58,11 @@ export class Board extends React.Component {
             status = 'Winner: ' + winner;
         } else {
             status = 'Next player: ' + (this.state.isAiTurn ? this.state.ai : this.state.human)
+        }
+
+        // If the AI start we call the agent first
+        if (this.state.isAiTurn) {
+            this.handleAIPick();
         }
 
         return (

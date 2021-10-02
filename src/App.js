@@ -1,11 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import {Game} from './components/Game'
+import { PreGame } from './components/PreGame'
 
 function App() {
   return (
     <div>
-      <Game />
+      {/* <Game /> */}
+      <PreGame />
     </div>
   );
 }

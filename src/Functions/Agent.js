@@ -1,22 +1,27 @@
 
 // Function called from the game
-export function AI(squares, isMaximizing) {
-    const aiMove = bestMove(squares);
+export function AI(squares, human, ai, isMaximizing) {
+    const aiMove = bestMove(squares, human, ai);
     console.log("result: " + aiMove);
     return aiMove;
 }
 
 //#region AI functions
 // Starting the actual function and returning the best move found
-function bestMove(board) {
+function bestMove(board, human, ai) {
     let _board = board.slice();
     let value = -Infinity;
     let move;
+
+    if (_board.every(s => s === null)) {
+        return 4;
+    }
+
     const moves = getPossibleMoves(_board);
     for (let i = 0; i < moves.length; i++) {
-        _board[moves[i]] = 'X';
+        _board[moves[i]] = ai;
         //let score = minimax(_board, 20, false);
-        let score = alphaBeta(_board, 20, -Infinity, Infinity, false)
+        let score = alphaBeta(_board, 20, -Infinity, Infinity, false, human, ai)
         _board[moves[i]] = null;
         if (score > value) {
             value = score;
@@ -27,12 +32,20 @@ function bestMove(board) {
 }
 
 //#region alpha beta pruning
-function alphaBeta(board, depth, alpha, beta, isMaximizing) {
+function alphaBeta(board, depth, alpha, beta, isMaximizing, human, ai) {
     let _board = board.slice();
     const result = calculateWinner(_board);
     if (result !== null) {
-        return winnerScores[result];
-    } else if (depth === 0 ) {
+        //AI is maximizer and human is minimizer
+        if (result === ai)
+            return 20;
+        else if (result === human)
+            return -20;
+        else // return 0 for a tie
+            return 0;
+        //return winnerScores[result];
+
+    } else if (depth === 0) {
         return calculateHuristic(_board, isMaximizing);
     }
 
@@ -41,8 +54,8 @@ function alphaBeta(board, depth, alpha, beta, isMaximizing) {
         const moves = getPossibleMoves(_board);
         for (let i = 0; i < moves.length; i++) {
             // Set the local board
-            _board[moves[i]] = isMaximizing ? 'X' : 'O';
-            let score = alphaBeta(_board, depth - 1, alpha, beta, false);
+            _board[moves[i]] = isMaximizing ? ai : human;
+            let score = alphaBeta(_board, depth - 1, alpha, beta, false, human, ai);
             // Reset the local board
             _board[moves[i]] = null;
             value = Math.max(value, score);
@@ -56,8 +69,8 @@ function alphaBeta(board, depth, alpha, beta, isMaximizing) {
         let value = Infinity;
         const moves = getPossibleMoves(_board);
         for (let i = 0; i < moves.length; i++) {
-            _board[moves[i]] = isMaximizing ? 'X' : 'O';
-            let score = alphaBeta(_board, depth - 1, alpha, beta, true);
+            _board[moves[i]] = isMaximizing ? ai : human;
+            let score = alphaBeta(_board, depth - 1, alpha, beta, true, human, ai);
             _board[moves[i]] = null;
             value = Math.min(value, score);
             if (value <= alpha) {
